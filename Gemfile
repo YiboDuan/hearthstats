@@ -17,6 +17,7 @@ group :development do
   gem 'rack-mini-profiler'
   gem 'database_cleaner'
   gem 'guard-zeus'
+  gem 'awesome_print'
 end
 
 group :assets do
