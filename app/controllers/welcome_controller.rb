@@ -44,11 +44,11 @@ class WelcomeController < ApplicationController
     if !current_user.is_admin?
       redirect_to root_path, alert: "Y U NO ADMIN" and return
     end
-    season = 6
+    season = 7
     
     get_ranked_graph_data(season)
 
-    matches = Match.where(season_id: 7)
+    matches = Match.where(season_id: season)
     # Determine match Class Win Rates
     @classes_array = Klass.list
     classes = Klass.list
