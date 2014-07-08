@@ -65,4 +65,8 @@ class User < ActiveRecord::Base
   def is_new?
     Match.where(user_id: id).count == 0
   end
+
+  def is_admin?
+    has_role? :admin
+  end
 end
