@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
     
     win_rate
   end
-
+  
   helper_method :uploader_url, :get_win_rate, :public_url, :klasses_hash
 
 
