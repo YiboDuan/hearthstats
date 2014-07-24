@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
   belongs_to :tourny
   belongs_to :subscription
+  has_many :tournaments, through: :tourn_users
   
   ### CLASS METHODS:
   

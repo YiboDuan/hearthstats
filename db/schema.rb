@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140623185606) do
+ActiveRecord::Schema.define(:version => 20140718202810) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -61,14 +61,14 @@ ActiveRecord::Schema.define(:version => 20140623185606) do
   end
 
   create_table "arena_runs", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "gold",       :default => 0
-    t.integer  "dust",       :default => 0
-    t.boolean  "complete",   :default => false
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.integer  "user_id",    :limit => 255
+    t.integer  "gold",                      :default => 0
+    t.integer  "dust",                      :default => 0
+    t.boolean  "complete",                  :default => false
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
     t.text     "notes"
-    t.string   "patch",      :default => "current"
+    t.string   "patch",                     :default => "current"
     t.integer  "klass_id"
   end
 
@@ -111,15 +111,6 @@ ActiveRecord::Schema.define(:version => 20140623185606) do
   end
 
   add_index "cards", ["type_id"], :name => "index_cards_on_type_id"
-
-  create_table "coaches", :force => true do |t|
-    t.integer  "user_id"
-    t.text     "description"
-    t.text     "available"
-    t.boolean  "active",      :default => true
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-  end
 
   create_table "comments", :force => true do |t|
     t.integer  "owner_id",         :null => false
@@ -227,6 +218,7 @@ ActiveRecord::Schema.define(:version => 20140623185606) do
   add_index "impressions", ["impressionable_type", "impressionable_id", "ip_address"], :name => "poly_ip_index"
   add_index "impressions", ["impressionable_type", "impressionable_id", "request_hash"], :name => "poly_request_index"
   add_index "impressions", ["impressionable_type", "impressionable_id", "session_hash"], :name => "poly_session_index"
+  add_index "impressions", ["impressionable_type", "message", "impressionable_id"], :name => "impressionable_type_message_index"
   add_index "impressions", ["user_id"], :name => "index_impressions_on_user_id"
 
   create_table "klasses", :force => true do |t|
@@ -457,6 +449,52 @@ ActiveRecord::Schema.define(:version => 20140623185606) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "tourn_decks", :force => true do |t|
+    t.integer  "tournament_id"
+    t.integer  "tourn_user_id"
+    t.integer  "deck_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "tourn_matches", :force => true do |t|
+    t.integer  "tourn_pair_id"
+    t.integer  "p1_tourndeck_id"
+    t.integer  "p2_tourndeck_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "tourn_pairs", :force => true do |t|
+    t.integer  "tournament_id"
+    t.integer  "roundof"
+    t.integer  "pos"
+    t.integer  "p1_id"
+    t.integer  "p2_id"
+    t.boolean  "winners"
+    t.integer  "winner_id"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.string   "screenshot_file_name"
+    t.string   "screenshot_content_type"
+    t.integer  "screenshot_file_size"
+    t.datetime "screenshot_updated_at"
+  end
+
+  create_table "tourn_users", :force => true do |t|
+    t.integer "tournament_id"
+    t.integer "user_id"
+  end
+
+  create_table "tournaments", :force => true do |t|
+    t.string   "name"
+    t.integer  "creator_id"
+    t.integer  "bracket_format"
+    t.integer  "num_players"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "tournies", :force => true do |t|
     t.integer  "challonge_id"
     t.integer  "status",        :default => 0
@@ -502,18 +540,18 @@ ActiveRecord::Schema.define(:version => 20140623185606) do
   add_index "unique_decks", ["cardstring"], :name => "index_unique_decks_on_cardstring"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :null => false
-    t.string   "encrypted_password",                    :null => false
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0, :null => false
+    t.integer  "sign_in_count",          :default => 0,  :null => false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "tourny_id"
     t.boolean  "guest"
     t.string   "userkey"
